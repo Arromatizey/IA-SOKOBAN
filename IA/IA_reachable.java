@@ -84,26 +84,45 @@ public class IA_reachable {
     }
 
 
-    public void AutomaticCoup(ArrayList<Path> paths, Jeu j) {
-        int ligneP = j.lignePousseur();
-        int colonneP = j.colonnePousseur();
+    public void automaticCoup(ArrayList<Path> paths, Jeu j) {
         Iterator<Path> ite = paths.iterator();
         Path prefix = paths.get(0);
-        Iterator<Path> childIterator= p.childs.iterator();
-        int[] newcase = new int[p.length];
-        Coup cp;
-        int pousseurL = j.lignePousseur();
-        int pousseurC = j.colonnePousseur();
+        Iterator<Path> childIterator= prefix.childs.iterator();
 
-        while(prefix != null){
-            if(p != null){      //on deplace selon le prefix
-                newcase = p.position;
-                cp = j.elaboreCoup(newcase[0], newcase[0]);
-                j.joue(cp);
-                prefix = p.prefix;
-            }else{              //passe aux path fils
-                while(!childIterator.hasNext()){
-                    AutomaticCoup(childIterator.next(), j);
+        while (prefix != null) {
+            if (prefix.position != null) {  // on se déplace selon le prefix
+                int ligneP = j.lignePousseur();
+                int colonneP = j.colonnePousseur();
+                int[] newcase = prefix.position;
+                int newLigneP = newcase[0];
+                int newColonneP = newcase[1];
+
+                // On calcule le déplacement horizontal et vertical
+                int dx = newColonneP - colonneP;
+                int dy = newLigneP - ligneP;
+
+                // On construit le coup correspondant et on le joue
+                Coup coup;
+                if (dx == 1) {
+                    coup = new Coup(Coup.DROITE);
+                } else if (dx == -1) {
+                    coup = new Coup(Coup.GAUCHE);
+                } else if (dy == 1) {
+                    coup = new Coup(Coup.BAS);
+                } else if (dy == -1) {
+                    coup = new Coup(Coup.HAUT);
+                } else {
+                    throw new RuntimeException("Mouvement invalide");
+                }
+                j.joue(coup);
+                prefix = prefix.prefix;  // On passe au préfixe suivant
+
+            } else {  // on passe aux path fils
+                if (childIterator.hasNext()) {
+                    prefix = childIterator.next();
+                    childIterator = prefix.childs.iterator();
+                } else {
+                    prefix = null;
                 }
             }
             try {
