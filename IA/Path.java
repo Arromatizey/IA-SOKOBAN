@@ -16,6 +16,12 @@ public class Path<E> {
         this.childs = null;
     }
 
+    public Path(int[] position) {  // Modify the constructor to take an additional int[] argument
+        this.prefix = null;
+        this.position = position;  // Initialize the position field
+        this.childs = null;
+    }
+
     public Path(Path prefix, int[] position) {  // Modify the constructor to take an additional int[] argument
         if (prefix != null) {
             this.length = prefix.length + 1;
@@ -28,6 +34,9 @@ public class Path<E> {
         this.childs = null;
     }
 
+    public void addPrefix(Path prefix){
+        this.prefix = prefix;
+    }
 
     public void addChild(Path path)
     {
