@@ -28,8 +28,7 @@ package Modele;
 
 import Global.Configuration;
 import Structures.Sequence;
-
-import java.util.logging.Logger;
+import IA.myAI;
 
 public abstract class IA {
 	private Jeu jeu;
@@ -48,6 +47,11 @@ public abstract class IA {
 				break;
 			case "ParcoursFixe":
 				resultat = new IAParcoursFixe();
+				break;
+			case "Mon IA":
+				myAI mon_ia =new myAI(j.niveau().clone());
+				mon_ia.solve();
+				resultat = mon_ia;
 				break;
 			default:
 				Configuration.erreur("IA de type " + type + " non supportée");

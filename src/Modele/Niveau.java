@@ -29,6 +29,8 @@ package Modele;
 import Global.Configuration;
 import Structures.Iterateur;
 
+import java.util.ArrayList;
+
 public class Niveau implements Cloneable {
 	static final int VIDE = 0;
 	static final int MUR = 1;
@@ -36,11 +38,11 @@ public class Niveau implements Cloneable {
 	static final int CAISSE = 4;
 	static final int BUT = 8;
 	int l, c;
-	int[][] cases;
+	public int[][] cases;
 	String nom;
 	public int pousseurL, pousseurC;
-	int nbButs;
-	int nbCaissesSurBut;
+	public int nbButs;
+	public int nbCaissesSurBut;
 
 	public Niveau() {
 		cases = new int[1][1];
@@ -136,7 +138,7 @@ public class Niveau implements Cloneable {
 		return null;
 	}
 
-	void appliqueMouvement(Mouvement m) {
+	public void appliqueMouvement(Mouvement m) {
 		if (m != null) {
 			int contenu = contenu(m.depuisL(), m.depuisC());
 			if (contenu != 0) {
@@ -152,7 +154,7 @@ public class Niveau implements Cloneable {
 		}
 	}
 
-	void joue(Coup cp) {
+	public void joue(Coup cp) {
 		appliqueMouvement(cp.caisse());
 		appliqueMouvement(cp.pousseur());
 		Iterateur<Marque> it2 = cp.marques().iterateur();
@@ -260,5 +262,24 @@ public class Niveau implements Cloneable {
 
 	public void fixerMarque(int m, int i, int j) {
 		cases[i][j] = (cases[i][j] & 0xFF) | (m << 8);
+	}
+
+	public ArrayList<int[]> findBoxes(Niveau l)
+	{
+		ArrayList<int[]> boxes = new ArrayList<int[]>();
+		for (int y = 0; y < l.colonnes(); ++y)
+		{
+			for (int x = 0; x < l.lignes(); ++x)
+			{
+				if (aCaisse(x, y)){
+					int[] position = new int[2];
+					position[0] = x;
+					position[1] = y;
+					boxes.add(position);
+				}
+
+			}
+		}
+		return boxes;
 	}
 }
