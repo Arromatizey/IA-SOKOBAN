@@ -54,39 +54,4 @@ public class FAP<E> {
         }
         return false;
     }
-
-
-//    public Path deleteMin() {
-//        if (size == 0) {
-//            throw new NoSuchElementException();
-//        }
-//        Path min = heap[1];
-//        heap[1] = heap[size];
-//        heap[size] = null;
-//        size--;
-//        int i = 1;
-//        while (true) {
-//            int left = i * 2;
-//            int right = i * 2 + 1;
-//            if (left > size) {
-//                break;
-//            } else if (right > size) {
-//                if (heap[left].priority < heap[i].priority) {
-//                    swap(i, left);
-//                    i = left;
-//                } else {
-//                    break;
-//                }
-//            } else {
-//                int minChild = heap[left].priority < heap[right].priority ? left : right;
-//                if (heap[minChild].priority < heap[i].priority) {
-//                    swap(i, minChild);
-//                    i = minChild;
-//                } else {
-//                    break;
-//                }
-//            }
-//        }
-//        return min;
-//    }
 }

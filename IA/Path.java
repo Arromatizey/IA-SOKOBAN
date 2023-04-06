@@ -3,40 +3,49 @@ package IA;
 import java.util.ArrayList;
 
 public class Path<E> {
-
+    E position;
     public int length;
     public Path prefix;
-    public int[] position;  // Add a new field for the position
 
     public ArrayList<Path> childs;
 
-    public Path() {
+    public Path()
+    {
         this.length = 0;
         this.prefix = null;
         this.childs = null;
     }
 
-    public Path(int[] position) {  // Modify the constructor to take an additional int[] argument
-        this.prefix = null;
-        this.position = position;  // Initialize the position field
-        this.childs = null;
-    }
-
-    public Path(Path prefix, int[] position) {  // Modify the constructor to take an additional int[] argument
-        if (prefix != null) {
-            this.length = prefix.length + 1;
+    public Path(Path prefix, E pos)
+    {
+        if(prefix != null)
+        {
+            this.length = prefix.length+1;
             this.prefix = prefix;
-        } else {
-            this.length = 1;
+            this.prefix.addChild(this);
+        }
+        else{
+            this.length = 0;
             this.prefix = null;
         }
-        this.position = position;  // Initialize the position field
+
         this.childs = null;
     }
 
-    public void addPrefix(Path prefix){
-        this.prefix = prefix;
+    public Path(Path prefix, E pos,int distance)
+    {
+        if(prefix != null)
+        {
+            this.prefix = prefix;
+            this.prefix.addChild(this);
+            this.length = prefix.length + distance;
+        } else
+        {
+            this.length = distance;
+        }
+        this.position = pos;
     }
+
 
     public void addChild(Path path)
     {
