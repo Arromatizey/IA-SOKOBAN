@@ -74,82 +74,69 @@ public class GameState extends Node<GameState>{
     {
         ArrayList<int[]> boxes = new ArrayList<>();
         boxes = level.findBoxes(level);
-        Iterator<int[]> ite = boxes.iterator();
-        int[] box = new int[2];
-        while(!ite.hasNext()){
-            box = ite.next();
+        for(int[] box : boxes){
             if(isBoxBlocked(box[0], box[1])){return true;}
         }
         return false;
     }
 
     public boolean isBoxBlocked(int l, int c){  //verifie si une box est bloquée en regaredant le mur ou elle bloque
-        int[] wallCoord = new int[2];
-        wallCoord = blockingWall(l, c);     //recupere ou se trouve le mur qui blocke
-        if(wallCoord[0] != l && wallCoord[1] != c){return false;}  //box dans un coin
-        int dL = l - wallCoord[0], dC = c - wallCoord[1]; //trouve les directions ou se déplacer, si dL != 0 deplacement vertical
-        if(dC != 0){
-            int compd = 0, compg = 0;
-            while(level.aMur(wallCoord[0] + compd, wallCoord[1]) && level.estOccupable(l + compd, c)){ //verifie si sortie a droite
-                compd++;
-            }
-            while(level.aMur(wallCoord[0] - compg, wallCoord[1]) && level.estOccupable(l - compg, c)){     //verification si sortie gauche
-                compg++;
-            }
-            //verify if the position where the comp has stopped is a way
-            if((level.aMur(wallCoord[0] + compd, wallCoord[1]) && level.estOccupable(l + compd, c)) || (level.aMur(wallCoord[0], wallCoord[1] - compg) && level.estOccupable(l, c - compg))){
-                return false;
-            }
-
-            else{
-                return true;
-            }
+        int offset = 0;
+        if(blockingWall(l,c,1,0))
+        {
+            return true;
         }
-        else if(dL
-                != 0){
-            int compd = 1, compg = 1;
-            while(level.aMur(wallCoord[0], wallCoord[1] + compd) && level.estOccupable(l, c + compd)){ //verifie si sortie a droite
-                compd++;
-            }
-            while(level.aMur(wallCoord[0] - compg, wallCoord[1]) && level.estOccupable(l , c - compg)){     //verification sortie gauche
-                compg++;
-            }
-            //verify if the possition where the comp has stopped is a way
-            if((level.aMur(wallCoord[0], wallCoord[1] + compd) && level.estOccupable(l, c + compd)) || (level.aMur(wallCoord[0] - compg, wallCoord[1]) && level.estOccupable(l , c - compg))){
-                return false;
-            }
-            else{
-                return true;
-            }
+        if(blockingWall(l,c,-1,0))
+        {
+            return true;
         }
-        return true;
+        if(blockingWall(l,c,0,-1))
+        {
+            return true;
+        }
+        if(blockingWall(l,c,0,-1))
+        {
+            return true;
+        }
+        return false;
     }
 
-    public int[] blockingWall(int l, int c){
-        int[] wallCoord = new int[2];
-        wallCoord[0] = l;
-        wallCoord[1] = c;
-        if(level.aMur(l+1, c)){
-            wallCoord[0] = l+1;
-            wallCoord[1] = c;
-            return wallCoord;
+    public boolean blockingWall(int l, int c,int dl,int dc){
+        int offset = 0;
+        int diff = 0;
+        if(dl != 0 && level.aMur(l+dl,c))
+        {
+            while(!level.aMur(l,c+diff) && level.aMur(l + 1, c+diff) && l+dl<level.lignes() && c+diff<level.colonnes())
+            {
+                offset++;
+                diff = (-1)*(offset%2)*offset/2 + ((offset+1)%2)*offset/2;
+                if(level.aMur(l,c+diff))
+                {
+                    return false;
+                } else if(!level.aMur(l+1, c+diff)){
+                    return true;
+                }
+            }
+            return false;
         }
-        if(level.aMur(l-1, c)){
-            wallCoord[0] = l-1;
-            wallCoord[1] = c;
-            return wallCoord;
+        offset = c - level.colonnes();
+        if(dc != 0 && level.aMur(l,c+dc))
+        {
+            while(!level.aMur(l+diff,c) && level.aMur(l + diff, c+dc) && l+diff<level.lignes() && c+dc<level.colonnes())
+            {
+                offset++;
+                diff = (-1)*(offset%2)*offset/2 + ((offset+1)%2)*offset/2;
+                if(level.aMur(l+diff,c))
+                {
+                    return false;
+                } else if(!level.aMur(l + offset, c+1)){
+                    return true;
+                }
+
+            }
+            return false;
         }
-        if(level.aMur(l, c+1)){
-            wallCoord[0] = l;
-            wallCoord[1] = c+1;
-            return wallCoord;
-        }
-        if(level.aMur(l, c-1)){
-            wallCoord[0] = l;
-            wallCoord[1] = c-1;
-            return wallCoord;
-        }
-        return wallCoord;
+        return false;
     }
     @Override
     public boolean compareTo(GameState elem)
@@ -204,6 +191,13 @@ public class GameState extends Node<GameState>{
     public ArrayList<PositionInLevel> interestingCaseBox(int x, int y){
         ArrayList<PositionInLevel> positions = new ArrayList<>();
         int[] pos = new int[2];
+        if(level.aBut(x,y))
+        {
+            if(!isBoxBlocked(x,y))
+            {
+                
+            }
+        }
         for(int i = 0; i<3; i++){
             if(level.aBut(x, y) && !isBoxBlocked(x, y)){
                 if(level.aBut(x+1, y)){
@@ -262,8 +256,9 @@ public class GameState extends Node<GameState>{
         ArrayList<PositionInLevel> res = new ArrayList<>();
 
         int[] boxpos = new int[2];
-        while(!ite.hasNext()){
-            boxpos = ite.next();
+        for (int[] box : boxes)
+        {
+            boxpos = box;
             pos = interestingCaseBox(boxpos[0], boxpos[1]);
             res.addAll(pos);
         }

@@ -28,6 +28,7 @@ public class Path<E> {
             this.length = 0;
             this.prefix = null;
         }
+        this.position = pos;
 
         this.childs = null;
     }

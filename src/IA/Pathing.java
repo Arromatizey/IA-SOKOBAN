@@ -35,10 +35,16 @@ public class Pathing<E extends Node> {
             if(this.isEndState())
             {
                 this.computed = true;
+                this.targets_reached = true;
                 return;
             }
             neighbors = current.position.neighbors();
             for (E node : neighbors ) {
+                if(node instanceof GameState)
+                {
+                    System.out.print("IsBadState ="+node.isBadState()+"\n");
+                }
+
                 if(!node.isBadState()) {
                     Path<E> new_path = new Path<E>(current, node, current.position.distanceTo(node));
                     fap.insert(new_path, current.length + current.position.distanceTo(node));

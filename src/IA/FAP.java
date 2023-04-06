@@ -14,7 +14,7 @@ public class FAP<E> {
         FAPChain current = head;
         if(head == null)
         {
-            head = new FAPChain<E>(element,priority);
+            head = new_element;
             return;
         }
         if(current.priority>priority)
@@ -27,8 +27,9 @@ public class FAP<E> {
         {
             if(current.next.priority>priority)
             {
-                new_element.next = current;
+                FAPChain<E> temp = current.next;
                 current.next = new_element;
+                new_element.next = temp;
                 return;
             }
             current = current.next;
