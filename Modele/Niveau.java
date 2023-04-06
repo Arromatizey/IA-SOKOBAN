@@ -28,6 +28,7 @@ package Modele;
 
 import Global.Configuration;
 import Structures.Iterateur;
+import java.util.ArrayList;
 
 public class Niveau implements Cloneable {
 	static final int VIDE = 0;
@@ -162,7 +163,7 @@ public class Niveau implements Cloneable {
 		}
 	}
 
-	Coup deplace(int i, int j) {
+	public Coup deplace(int i, int j) {
 		Coup cp = elaboreCoup(i, j);
 		if (cp != null)
 			joue(cp);
@@ -231,6 +232,25 @@ public class Niveau implements Cloneable {
 
 	public int colonnePousseur() {
 		return pousseurC;
+	}
+
+	public ArrayList<int[]> findBoxes(Niveau l)
+	{
+		ArrayList<int[]> boxes = new ArrayList<int[]>();
+		for (int y = 0; y < l.colonnes(); ++y)
+		{
+			for (int x = 0; x < l.lignes(); ++x)
+			{
+				if (aCaisse(x, y)){
+					int[] position = new int[2];
+					position[0] = x;
+					position[1] = y;
+					boxes.add(position);
+				}
+
+			}
+		}
+		return boxes;
 	}
 
 	// Par convention, la méthode clone de java requiert :

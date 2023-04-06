@@ -1,6 +1,4 @@
 package Modele;
-import Modele.Niveau;
-
 /*
  * Sokoban - Encore une nouvelle version (à but pédagogique) du célèbre jeu
  * Copyright (C) 2018 Guillaume Huard
@@ -58,5 +56,4 @@ public class Mouvement {
 	public String toString() {
 		return "(" + depuisL + ", " + depuisC + ") -> (" + versL + ", " + versC + ")";
 	}
-
 }
